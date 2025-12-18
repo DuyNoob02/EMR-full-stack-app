@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+
+@theme {
+  --color-primary-title: #c41814;
+  --color-primary-background: #fec8c6;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+}
