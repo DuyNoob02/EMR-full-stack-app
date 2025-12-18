@@ -1,14 +1,10 @@
+import DashboardCard from '../../components/ui/DashboardCard';
+import { ClipboardList, Hospital } from 'lucide-react';
 export default function MedicalRecordsPage() {
   return (
-    <div>
-
-      <ul className="list-disc pl-6">
-        <li>
-          <a href="/medical-records/patient-manager" className="text-blue-600 hover:underline">
-            Quản lý người bệnh
-          </a>
-        </li>
-      </ul>
+    <div className='grid grid-cols-6 gap-4 p-4'>
+      <DashboardCard title="Danh sách người bệnh tại khoa" href="medical-records/patient-manager" icon={<ClipboardList size={20} />} />
+      <DashboardCard title="Danh sách người bệnh xuất viện" href="/patient-manager" icon={<Hospital size={20} />} />
     </div>
   );
 }

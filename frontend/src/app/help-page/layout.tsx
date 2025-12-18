@@ -1,0 +1,9 @@
+import Breadcrumbs from "../../components/ui/Breadcrumb";
+export default function HelpPageLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="container mx-auto p-4">
+      <Breadcrumbs />
+      {children}
+    </div>
+  );
+}
