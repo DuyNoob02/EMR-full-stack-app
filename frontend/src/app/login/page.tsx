@@ -1,47 +1,35 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { message } from "antd";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { loginSchema, LoginFormData } from "../../features/auth/schemas/login.schema";
+import { loginApi } from "../../features/auth/api/auth.api";
+import { useAuthStore } from "../../features/auth/store/auth.store";
 
 export default function LoginPage() {
     const router = useRouter();
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const loginStore = useAuthStore();
     const [messageApi, contextHolder] = message.useMessage();
 
 
-    const [error, setError] = useState({
-        username: '',
-        password: ''
+    const form = useForm<LoginFormData>({
+        resolver: zodResolver(loginSchema),
     });
-    const handleLogin = (e) => {
-        try {
-            e.preventDefault();
 
-            const newError = {
-                username: username ? '' : 'Vui lòng nhập mã nhân viên',
-                password: password ? '' : 'Vui lòng nhập mật khẩu'
-            };
-            setError(newError);
-            if (newError.username || newError.password) {
-                return;
-            }
-            messageApi.open({
-                type: 'success',
-                content: 'Đăng nhập thành công!',
-                duration: 2,
-            });
-            setTimeout(() => {
-                router.push('medical-records/patient-manager');
-            }, 2000);
-        } catch (err) {
-            messageApi.open({
-                type: 'error',
-                content: 'Đăng nhập thất bại. Vui lòng thử lại.',
-                duration: 4,
-            });
-        }
-    };
+    const loginMutation = useMutation({
+        mutationFn: loginApi,
+        onSuccess: (data) => {
+            loginStore.login(data);
+            messageApi.success('Đăng nhập thành công!', 2);
+            router.push('/medical-records/patient-manager');
+        },
+        onError: (error: any) => {
+            messageApi.error(error.message || 'Đăng nhập thất bại. Vui lòng thử lại.');
+        },
+    });
+
 
 
 
@@ -54,20 +42,22 @@ export default function LoginPage() {
                 <div className="bg-white/90  backdrop-blur-md shadow-lg rounded-xl  w-full max-w-md">
                     <h2 className="text-3xl text-white font-bold text-center bg-primary-background p-3 rounded">DH - EMR</h2>
 
-                    <form className="mt-6 px-8 pb-8">
+                    <form className="mt-6 px-8 pb-8" onSubmit={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        form.handleSubmit((data) => { loginMutation.mutate(data) })(e);
+                    }}>
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
                                 Mã nhân viên
                             </label>
                             <input
+                                {...form.register('employeeCode')}
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight"
-                                id="username"
                                 type="text"
-                                value={username}
                                 placeholder="Mã nhân viên"
-                                onChange={(e) => setUsername(e.target.value)}
                             />
-                            {error.username && <p className="text-red-500 text-xs italic mt-2">{error.username}</p>}
+                            {form.formState.errors.employeeCode && <p className="text-red-500 text-xs italic mt-2">{form.formState.errors.employeeCode.message}</p>}
                         </div>
 
                         <div className="mb-4">
@@ -75,19 +65,17 @@ export default function LoginPage() {
                                 Mật khẩu
                             </label>
                             <input
+                                {...form.register('password')}
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight"
-                                id="password"
                                 type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Mật khẩu"
                             />
-                            {error.password && <p className="text-red-500 text-xs italic mt-2">{error.password}</p>}
+                            {form.formState.errors.password && <p className="text-red-500 text-xs italic mt-2">{form.formState.errors.password.message}</p>}
                         </div>
 
                         <div className="flex items-center justify-center">
-                            <button onClick={handleLogin} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
-                                Đăng nhập
+                            <button type='submit' disabled={loginMutation.isPending} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+                                {loginMutation.isPending ? 'Đang đăng nhập...' : 'Đăng nhập'}
                             </button>
                         </div>
                     </form>
