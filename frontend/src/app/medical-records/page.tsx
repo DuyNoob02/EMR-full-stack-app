@@ -1,5 +1,9 @@
 import DashboardCard from '../../components/ui/DashboardCard';
 import { ClipboardList, Hospital } from 'lucide-react';
+
+export const metadata = {
+    title: "Bệnh án",
+};
 export default function MedicalRecordsPage() {
   return (
     <div className='grid grid-cols-6 gap-4 p-1'>

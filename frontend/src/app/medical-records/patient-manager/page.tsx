@@ -4,7 +4,7 @@ import { ConfigProvider, Dropdown, Table, Tag } from "antd";
 import { useState } from "react";
 import { PlusOutlined, SearchOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import { BarChart, Bar, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import { PieChart } from "@/components/ui/PieChart";
 
 interface RoomBed {
     room: string;
@@ -41,7 +41,6 @@ interface PatientRecord {
 export default function PatientManagerPage() {
     const [showStats, setShowStats] = useState(true);
     const [selectedDoctor, setSelectedDoctor] = useState("Bác sĩ điều trị (Tất cả)");
-    const [chartType, setChartType] = useState<"bar" | "pie">("bar");
     const columns: ColumnsType<PatientRecord> = [
         { title: "Mã bệnh nhân", dataIndex: "patientCode", width: 100, align: "center" },
         {
@@ -264,8 +263,9 @@ export default function PatientManagerPage() {
     // ];
 
     // Data cho biểu đồ chế độ chăm sóc
+    // Data cho biểu đồ chế độ chăm sóc
     const careData = [
-        { name: 'Cấp I', value: 3, color: '#f97316' },
+        { name: 'Cấp I', value: 24, color: '#f97316' },
         { name: 'Cấp II', value: 8, color: '#eab308' },
         { name: 'Cấp III', value: 3, color: '#22c55e' }
     ];
@@ -317,7 +317,11 @@ export default function PatientManagerPage() {
 
                     <input
                         className="border border-gray-300 rounded px-3 py-1 text-sm min-w-40 focus:outline-none focus:border-teal-500"
-                        placeholder="Mã tiếp nhận"
+                        placeholder="Mã khám bệnh"
+                    />
+                    <input
+                        className="border border-gray-300 rounded px-3 py-1 text-sm min-w-40 focus:outline-none focus:border-teal-500"
+                        placeholder="Mã bệnh án"
                     />
 
                     <input
@@ -341,12 +345,12 @@ export default function PatientManagerPage() {
             <div className="flex ">
                 {/* ===== STATS PANEL (LEFT) ===== */}
                 <div
-                    className={`bg-white rounded-lg shadow transition-all duration-300 ease-in-out ${showStats ? "w-[300px] opacity-100" : "w-0 opacity-0 overflow-hidden"
+                    className={`bg-white rounded-lg shadow transition-all duration-300 ease-in-out ${showStats ? "w-[260px] opacity-100" : "w-0 opacity-0 overflow-hidden"
                         }`}
                 >
-                    <div className="p-4 space-y-3 min-w-[300px]">
+                    <div className="p-1 space-y-3 min-w-[260px]">
                         {/* Tổng số người bệnh */}
-                        <div className="border-2 border-teal-500 rounded-lg p-4 bg-linear-to-br from-teal-50 to-white">
+                        <div className="flex flex-col items-center border-2 border-teal-500 rounded-lg p-1 bg-linear-to-br from-teal-50 to-white">
                             <div className="text-sm text-gray-600 mb-1 font-medium">
                                 Tổng số người bệnh
                             </div>
@@ -360,19 +364,25 @@ export default function PatientManagerPage() {
                             <div className="text-sm text-gray-600 mb-3 font-semibold">
                                 Chế độ chăm sóc
                             </div>
-                            <div className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm">• Cấp I:</span>
-                                    <span className="font-semibold text-orange-600">3</span>
-                                </div> <div className="flex items-center justify-between">
-                                    <span className="text-sm">• Cấp II:</span>
-                                    <span className="font-semibold text-yellow-600">8</span>
+                            {/* flex chart and stats */}
+                            <div className="flex flex-row items-center justify-between gap-4">
+                                {/* Biểu đồ */}
+                                <div className="">
+                                    <PieChart data={careData} />
                                 </div>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm">• Cấp III:</span>
-                                    <span className="font-semibold text-green-600">3</span>
+                                <div className="space-y-1">
+                                    <ul className="">
+                                        <li className="text-sm">Cấp I: <span className="font-semibold text-red-600">{careData[0].value}</span></li>
+                                    </ul>
+                                    <ul className="">
+                                        <li className="text-sm">Cấp II: <span className="font-semibold text-yellow-600">{careData[1].value}</span></li>
+                                    </ul>
+                                    <ul className="">
+                                        <li className="text-sm">Cấp III: <span className="font-semibold text-green-600">{careData[2].value}</span></li>
+                                    </ul>
                                 </div>
                             </div>
+
                         </div>
 
                         {/* Nguy cơ té ngã */}

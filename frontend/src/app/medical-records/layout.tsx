@@ -5,6 +5,7 @@ import Breadcrumbs from "../../components/ui/Breadcrumb";
 import Header from "../../components/layout/Header";
 import DepartmentSelectorModal from "../../components/ui/DepartmentSelectorModal";
 
+
 export default function MedicalRecordsLayout({ children }) {
     const [modalOpen, setModalOpen] = useState(false);
 

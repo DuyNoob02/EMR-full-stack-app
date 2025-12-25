@@ -1,5 +1,5 @@
 const breadcrumbTitles: Record<string, string> = {
-    "patient-manager": "Danh sách người bệnh tại khoa",
+    "patient-manager": "Danh sách bệnh nhân đang điều trị",
     "medical-records": "Bệnh án",
     "help-page": "Trợ giúp"
 };
