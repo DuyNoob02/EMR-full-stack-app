@@ -22,8 +22,11 @@ export default function LoginPage() {
         mutationFn: loginApi,
         onSuccess: (data) => {
             loginStore.login(data);
-            messageApi.success('Đăng nhập thành công!', 2);
-            router.push('/medical-records/patient-manager');
+            messageApi.success({
+                content: 'Đăng nhập thành công!', duration: 2, onClose: () => {
+                    router.push('/medical-records/patient-manager');
+                }
+            });
         },
         onError: (error: any) => {
             messageApi.error(error.message || 'Đăng nhập thất bại. Vui lòng thử lại.');

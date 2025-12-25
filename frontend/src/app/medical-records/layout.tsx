@@ -15,7 +15,7 @@ export default function MedicalRecordsLayout({ children }) {
                 <Header onOpenDepartmentModal={() => setModalOpen(true)} />
             </div>
 
-            <div className="p-6">{children}</div>
+            <div className="p-1">{children}</div>
 
             <DepartmentSelectorModal
                 open={modalOpen}

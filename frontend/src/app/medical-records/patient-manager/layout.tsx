@@ -4,7 +4,7 @@
 export default function PatientManagerLayout({ children }) {
 
   return (
-    <div className="p-2">
+    <div className="px-2">
       {/* <Breadcrumbs /> */}
       {children}
     </div>
